@@ -24,14 +24,16 @@ def main():
 	pattern = r"\.(png|jpeg|jpg)$"
 	pattern = re.compile(pattern)
 	for dirname in dirs:
-		if os.path.isdir(dirname):
+		dirpath = "{}/{}".format(args.source_dir, dirname)
+		if os.path.isdir(dirpath):
 			print dirname
-			files = os.listdir("{}/{}".format(args.source_dir, dirname))
+			files = os.listdir(dirpath)
 			for i, filename in enumerate(files):
 				if pattern.search(filename) is not None:
+					filepath = "{}/{}".format(dirpath, filename)
 					sys.stdout.write("Processing ({}/{}) {}\r".format(i, len(files), filename))
 					sys.stdout.flush()
-					image = cv2.imread("{}/{}/{}".format(args.source_dir, dirname, filename))
+					image = cv2.imread(filepath)
 					gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 					gray = cv2.equalizeHist(gray)
 					faces = cascade.detectMultiScale(gray,
