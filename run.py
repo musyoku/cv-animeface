@@ -30,21 +30,27 @@ def main():
 			files = os.listdir(dirpath)
 			for i, filename in enumerate(files):
 				if pattern.search(filename) is not None:
-					filepath = "{}/{}".format(dirpath, filename)
-					sys.stdout.write("Processing ({}/{}) {}\r".format(i, len(files), filename))
-					sys.stdout.flush()
-					image = cv2.imread(filepath)
-					gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-					gray = cv2.equalizeHist(gray)
-					faces = cascade.detectMultiScale(gray,
-						 scaleFactor = 1.1,
-						 minNeighbors = 5,
-						 minSize = (args.size, args.size))
-					for i, (x, y, w, h) in enumerate(faces):
-						# cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
-						cropped_image = image[y:y + h, x:x + w,:]
-						cv2.imwrite("{}/{}.png".format(args.output_dir, index), cv2.resize(cropped_image, (args.size, args.size), interpolation=cv2.INTER_AREA))
-						index += 1
+					try:
+						filepath = "{}/{}".format(dirpath, filename)
+						sys.stdout.write("Processing ({}/{}) {}\r".format(i, len(files), filename))
+						sys.stdout.flush()
+						image = cv2.imread(filepath)
+						gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+						gray = cv2.equalizeHist(gray)
+						faces = cascade.detectMultiScale(gray,
+							 scaleFactor = 1.1,
+							 minNeighbors = 5,
+							 minSize = (args.size, args.size))
+						for i, (x, y, w, h) in enumerate(faces):
+							# cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+							cropped_image = image[y:y + h, x:x + w,:]
+							cv2.imwrite("{}/{}.png".format(args.output_dir, index), cv2.resize(cropped_image, (args.size, args.size), interpolation=cv2.INTER_AREA))
+							index += 1
+					except KeyboardInterrupt:
+						sys.exit(0)
+					except:
+						print "Failed to load image %s" % filename
+						pass
 			print "Done."
 
 if __name__ == '__main__':
