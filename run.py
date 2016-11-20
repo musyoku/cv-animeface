@@ -43,7 +43,7 @@ def main():
 					for i, (x, y, w, h) in enumerate(faces):
 						# cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
 						cropped_image = image[y:y + h, x:x + w,:]
-						cv2.imwrite("{}/{}.png".format(args.output_dir, index), cv2.resize(cropped_image, (args.size, args.size)))
+						cv2.imwrite("{}/{}.png".format(args.output_dir, index), cv2.resize(cropped_image, (args.size, args.size), interpolation=cv2.INTER_AREA))
 						index += 1
 			print "Done."
 
