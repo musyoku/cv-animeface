@@ -3,7 +3,7 @@ import argparse, cv2, sys, os, re
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--source_dir", type=str)
-parser.add_argument("-o", "--output_dir", type=str)
+parser.add_argument("-o", "--output_dir", type=str, default="out")
 parser.add_argument("-s", "--size", type=int, default=64)
 args = parser.parse_args()
 
