@@ -24,25 +24,26 @@ def main():
 	pattern = r"\.(png|jpeg|jpg)$"
 	pattern = re.compile(pattern)
 	for dirname in dirs:
-		print dirname
-		files = os.listdir("{}/{}".format(args.source_dir, dirname))
-		for i, filename in enumerate(files):
-			if pattern.search(filename) is not None:
-				sys.stdout.write("Processing ({}/{}) {}\r".format(i, len(files), filename))
-				sys.stdout.flush()
-				image = cv2.imread("{}/{}/{}".format(args.source_dir, dirname, filename))
-				gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-				gray = cv2.equalizeHist(gray)
-				faces = cascade.detectMultiScale(gray,
-					 scaleFactor = 1.1,
-					 minNeighbors = 5,
-					 minSize = (args.size, args.size))
-				for i, (x, y, w, h) in enumerate(faces):
-					# cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
-					cropped_image = image[y:y + h, x:x + w,:]
-					cv2.imwrite("{}/{}.png".format(args.output_dir, index), cv2.resize(cropped_image, (args.size, args.size)))
-					index += 1
-		print "Done."
+		if os.path.isdir(dirname):
+			print dirname
+			files = os.listdir("{}/{}".format(args.source_dir, dirname))
+			for i, filename in enumerate(files):
+				if pattern.search(filename) is not None:
+					sys.stdout.write("Processing ({}/{}) {}\r".format(i, len(files), filename))
+					sys.stdout.flush()
+					image = cv2.imread("{}/{}/{}".format(args.source_dir, dirname, filename))
+					gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+					gray = cv2.equalizeHist(gray)
+					faces = cascade.detectMultiScale(gray,
+						 scaleFactor = 1.1,
+						 minNeighbors = 5,
+						 minSize = (args.size, args.size))
+					for i, (x, y, w, h) in enumerate(faces):
+						# cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+						cropped_image = image[y:y + h, x:x + w,:]
+						cv2.imwrite("{}/{}.png".format(args.output_dir, index), cv2.resize(cropped_image, (args.size, args.size)))
+						index += 1
+			print "Done."
 
 if __name__ == '__main__':
 	main()
